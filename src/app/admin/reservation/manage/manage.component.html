@@ -1,0 +1,112 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{formTitle}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" *ngIf="form">
+    <div class="container">
+        <form method="POST" [formGroup]="form" enctype="multipart/form-data" (ngSubmit)="submitReservation()"
+              class="form-horizontal">
+            <div class="form-group row">
+                <label class="col-4 col-form-label">User</label>
+                <div class="col-8 roles-select">
+                    <angular2-multiselect [data]="userList"
+                                          [(ngModel)]="selectedUser"
+                                          [settings]="userSelectSettings"
+                                          [formControlName]="'user'">
+                    </angular2-multiselect>
+                    <app-control-messages [control]="form.controls.user"></app-control-messages>
+                    <span *ngIf="errorMessage && errorMessage.user" class="error-message">{{ errorMessage.user }}</span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Server</label>
+                <div class="col-8 roles-select">
+                    <angular2-multiselect [data]="serverList"
+                                          [(ngModel)]="selectedServer"
+                                          [settings]="serverSelectSettings"
+                                          [formControlName]="'server'">
+                    </angular2-multiselect>
+                    <app-control-messages [control]="form.controls.server"></app-control-messages>
+                    <span *ngIf="errorMessage && errorMessage.server"
+                          class="error-message">{{ errorMessage.server }}</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Bitstream Configuration</label>
+                <div class="col-8 roles-select">
+                    <angular2-multiselect [data]="boardConfigList"
+                                          [(ngModel)]="selectedBoardConfig"
+                                          [settings]="boardConfigSelectSettings"
+                                          [formControlName]="'board_configuration'">
+                    </angular2-multiselect>
+                    <app-control-messages [control]="form.controls.board_configuration"></app-control-messages>
+                    <span *ngIf="errorMessage && errorMessage.board_configuration" class="error-message">{{ errorMessage.board_configuration }}</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Configuration (Board/Lane)</label>
+                <div class="col-8">
+                    <app-board-lane-matrix [boardList]="boardList" [laneList]="laneList" [reservationData]="reservationData" [boardDetailChecked]="boardDetailChecked"></app-board-lane-matrix>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Start Date</label>
+                <div class="col-8">
+                    <p-calendar
+                        [formControlName]="'start_date'"
+                        [showTime]="true"
+                        [showIcon]="true"
+                        [required]="true"
+                        [showButtonBar]="true"
+                        dateFormat="yy-mm-dd"
+                        [monthNavigator]="true"
+                        [yearNavigator]="true"
+                        yearRange="2018:2099"
+                        [utc]="true">
+                    </p-calendar>
+                    <app-control-messages [control]="form.controls.start_date"></app-control-messages>
+                    <span *ngIf="errorMessage && errorMessage.start_date" class="error-message">{{ errorMessage.start_date }}</span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-4 col-form-label">End Date</label>
+                <div class="col-8">
+                    <p-calendar
+                        [formControlName]="'end_date'"
+                        [showTime]="true"
+                        [showIcon]="true"
+                        [required]="true"
+                        [showButtonBar]="true"
+                        dateFormat="yy-mm-dd"
+                        [monthNavigator]="true"
+                        [yearNavigator]="true"
+                        yearRange="2018:2099"
+                        [utc]="true">
+                    </p-calendar>
+                    <app-control-messages [control]="form"></app-control-messages>
+                    <span *ngIf="errorMessage && errorMessage.end_date" class="error-message">{{ errorMessage.end_date }}</span>
+                </div>
+            </div>
+            <p *ngIf="errorMessage && errorMessage.reserved_server" class="text-center error-message">
+                {{errorMessage.reserved_server}}</p>
+            <div class="form-group row text-center">
+                <div class="offset-2 col-9">
+                    <button type="submit" class="btn btn-primary"
+                            [disabled]="!form.valid || reservationData.length == 0">
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Cancel</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+

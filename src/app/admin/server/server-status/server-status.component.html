@@ -1,0 +1,340 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'Server '+serverName" [icon]="'fa fa-bar-chart'"></app-page-header>
+    <div class="row" *ngIf="ready;else emptyTemp">
+        <div class="col col-xl-6 col-lg-12">
+            <div class="card mb-3">
+                <div class="card-header">Core</div>
+                <div class="card-body table-responsive">
+                    <table class="table table-sm table-hover table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>OS</td>
+                            <td>{{serverData.OS ? serverData.OS : notSupported}}</td>
+                        </tr>
+                        <tr>
+                            <td>Distribution</td>
+                            <td>{{serverData.Distro.name ? serverData.Distro.name : notSupported}}
+                                {{serverData.Distro?.version}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Virtualization</td>
+                            <td>{{serverData.virtualization.method ? serverData.virtualization.method : notSupported}}
+                                {{serverData.virtualization?.type}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Kernel</td>
+                            <td>{{serverData.Kernel ? serverData.Kernel : notSupported}}</td>
+                        </tr>
+                        <tr>
+                            <td>Model</td>
+                            <td>{{serverData.Model ? serverData.Model : notSupported}}</td>
+                        </tr>
+                        <tr>
+                            <td>Accessed IP</td>
+                            <td>{{serverData.AccessedIP ? serverData.AccessedIP : notSupported}}</td>
+                        </tr>
+                        <tr>
+                            <td>Uptime</td>
+                            <td>{{serverData.UpTime.text ? serverData.UpTime.text + "; " : notSupported}}
+                                {{serverData.UpTime.bootedTimestamp ? "booted " + serverData.UpTime.bootedTimestamp :
+                                notSupported}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Hostname</td>
+                            <td>{{serverData.HostName ? serverData.HostName : notSupported}}</td>
+                        </tr>
+                        <tr>
+                            <td>HTTP server</td>
+                            <td>{{serverData.webService}}</td>
+                        </tr>
+                        <tr>
+                            <td>PHP version</td>
+                            <td>{{serverData.phpVersion}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{"CPUs (" + serverData.CPU.length + ")"}}</td>
+                            <td>
+                <span *ngFor="let cpu of serverData.CPU">
+                {{cpu.Vendor + " -"}} {{cpu.Model}} {{"(" + cpu.MHz + " GHZ)"}} {{cpu.usage_percentage ? "(" + cpu.usage_percentage + "%)" : (0) + "%"}} <br>
+                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Overall CPU Usage</td>
+                            <td>{{serverData.cpuUsage ? serverData.cpuUsage + "%" : notSupported}}</td>
+                        </tr>
+                        <tr>
+                            <td>Load</td>
+                            <td>{{serverData.Load ? (serverData.Load['5min'] + " " + serverData.Load['15min'] + " " +
+                                serverData.Load.now) : notSupported}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Architecture</td>
+                            <td>{{serverData.CPUArchitecture ? serverData.CPUArchitecture : notSupported}}</td>
+                        </tr>
+                        <tr>
+                            <td>Processes</td>
+                            <td>
+                                {{serverData.processStats.totals ? "running: " + serverData.processStats.totals.running
+                                + "; " +
+                                "zombie: " + serverData.processStats.totals.zombie + "; "+
+                                "sleeping: " + serverData.processStats.totals.sleeping + "; " +
+                                "stopped: " + serverData.processStats.totals.stopped + "; "+
+                                "total: " + serverData.processStats.proc_total : notSupported}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Threads</td>
+                            <td>{{serverData.processStats.threads ? serverData.processStats.threads : notSupported}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Active Users</td>
+                            <td>{{serverData.numLoggedIn ? serverData.numLoggedIn : notSupported}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">Memory</div>
+                <div class="card-body table-responsive">
+                    <table class="table table-sm table-hover table-bordered">
+                        <thead class=" thead-dark text-center">
+                        <tr>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Used</th>
+                            <th>Free</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{serverData.RAM.type ? serverData.RAM.type : notSupported}}</td>
+                            <td class="text-right">{{ramTotal ? (ramTotal|fileSize) : "0 B"}}</td>
+                            <td class="text-right">{{ramUsed ? (ramUsed|fileSize) : "0 B"}}</td>
+                            <td class="text-right">{{ramFree ? (ramFree|fileSize) : "0 B"}} ({{ramTotal|percentage:
+                                ramUsed}})
+                            </td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">Swap</td>
+                            <td class="text-right">{{swapTotal ? (swapTotal|fileSize) : "0 B" }}</td>
+                            <td class="text-right">{{swapUsed ? (swapUsed|fileSize) : "0 B"}}</td>
+                            <td class="text-right">{{swapFree ? (swapFree|fileSize) : "0 B" }} ({{swapTotal|percentage:
+                                swapUsed}})
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <table class="table table-sm">
+                                    <thead>
+                                    <tr>
+                                        <th>Device</th>
+                                        <th>Type</th>
+                                        <th>Size</th>
+                                        <th>Used</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let ram of serverData.RAM.swapInfo">
+                                        <td>{{ram.device ? ram.device : notSupported}}</td>
+                                        <td>{{ram.type ? ram.type : notSupported}}</td>
+                                        <td class="text-right">{{ram.size|fileSize}}</td>
+                                        <td class="text-right">{{ram.used|fileSize}} ({{ram.size|percentage:
+                                            ram.used}})
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">Hard Drives</div>
+                <div class="card-body table-responsive">
+
+                    <table class="table table-sm table-hover table-bordered">
+                        <thead class=" thead-dark text-center">
+                        <tr>
+                            <th>Path</th>
+                            <th>Vendor</th>
+                            <th>Name</th>
+                            <th>Reads</th>
+                            <th>Writes</th>
+                            <th>Size</th>
+                            <th>Free</th>
+                            <th>Used</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <ng-container *ngFor="let drive of serverData.HD">
+                            <tr>
+                                <td rowspan="2">{{drive.device ? drive.device : notSupported}}</td>
+                                <td>{{drive.vendor ? drive.vendor : notSupported}}</td>
+                                <td>{{drive.name ? drive.name : notSupported}}</td>
+                                <td class="text-right">{{drive.reads ? drive.reads : notSupported}}</td>
+                                <td class="text-right">{{drive.writes ? drive.writes : notSupported}}</td>
+                                <td class="text-right">{{drive.size|fileSize}}</td>
+                                <td class="text-right">{{drive.free|fileSize}}</td>
+                                <td class="text-right">{{(drive.size - drive.free)|fileSize}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="7">
+                                    <table class="table table-sm">
+                                        <thead>
+                                        <tr>
+                                            <th>Partition</th>
+                                            <th>Size</th>
+                                            <th>Free</th>
+                                            <th>Used</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr *ngFor="let partition of drive.partitions">
+                                            <td>{{ drive.device }}{{ partition.number }}</td>
+                                            <td class="text-right">{{partition.size|fileSize}}</td>
+                                            <td class="text-right">{{partition.free|fileSize}}</td>
+                                            <td class="text-right">{{(partition.size - partition.free)|fileSize}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">Network Devices</div>
+                <div class="card-body table-responsive">
+                    <table class="table table-sm table-hover table-bordered">
+                        <thead class="thead-dark text-center">
+                        <tr>
+                            <th>Device Name</th>
+                            <th>Type</th>
+                            <th>Port Speed</th>
+                            <th>Amount Sent</th>
+                            <th>Amount Received</th>
+                            <th>State</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let netKey of networkDeviceKeys">
+                            <td>{{netKey}}</td>
+                            <td>{{serverData['Network Devices'][netKey].type}}
+                            </td>
+                            <td class="text-right">
+                                {{(serverData['Network Devices'][netKey].port_speed|fileSize) + "/s"}}
+                            </td>
+                            <td class="text-right">
+                                {{serverData['Network Devices'][netKey].sent.bytes|fileSize}}
+                            </td>
+                            <td class="text-right">
+                                {{serverData['Network Devices'][netKey].recieved.bytes|fileSize}}
+                            </td>
+                            <td>
+                                <span *ngIf="serverData['Network Devices'][netKey].state == 'up'"
+                                      class="text-success"><i class="fa fa-arrow-up"></i></span>
+                                <span *ngIf="serverData['Network Devices'][netKey].state == 'down'"
+                                      class="text-danger"><i class="fa fa-arrow-down"></i></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col col-xl-6 col-lg-12">
+
+            <div class="card mb-3">
+                <div class="card-header">Temperatures / Voltages</div>
+                <div class="card-body table-responsive">
+                    <table class="table table-sm table-hover table-bordered">
+                        <thead class="thead-dark text-center">
+                        <tr>
+                            <th>Device</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let temp of serverData.Temps">
+                            <td>{{temp.name ? temp.name : notSupported}}</td>
+                            <td>{{temp.temp && temp.unit ? temp.temp + " " + temp.unit : notSupported}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">Services</div>
+                <div class="card-body table-responsive">
+                    <table class="table table-sm table-hover table-bordered">
+                        <thead class="thead-dark text-center">
+                        <tr>
+                            <th>Service</th>
+                            <th>State</th>
+                            <th>PID</th>
+                            <th>Threads</th>
+                            <th>Memory Usage</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let srvKey of servicesKeys">
+                            <td>{{srvKey}}</td>
+                            <td>{{serverData.services[srvKey].state}}</td>
+                            <td class="text-right">{{serverData.services[srvKey].pid}}</td>
+                            <td class="text-right">{{serverData.services[srvKey].threads}}</td>
+                            <td class="text-right">{{serverData.services[srvKey].memory_usage|fileSize}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">Hardware</div>
+                <div class="card-body table-responsive">
+                    <table class="table table-sm table-hover table-bordered">
+                        <thead class=" thead-dark text-center">
+                        <tr>
+                            <th>Type</th>
+                            <th>Vendor</th>
+                            <th>Device</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let item of serverData.Devices">
+                            <td>{{item.type ? item.type : notSupported}}</td>
+                            <td>{{item.vendor ? item.vendor : notSupported}}</td>
+                            <td>{{item.device ? item.device : notSupported}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #emptyTemp>
+    <div *ngIf="error" class="col col-xl-6 col-lg-12 centered">
+        <div class="card mb-3">
+            <div class="card-header">{{error}}</div>
+        </div>
+    </div>
+</ng-template>

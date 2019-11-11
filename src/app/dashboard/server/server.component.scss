@@ -1,0 +1,19 @@
+.customer-servers-container {
+    .card-body {
+        min-height: 150px;
+
+        .title {
+            margin: 15px 0;
+        }
+        .date-interval {
+            margin: 5px 0 0 0;
+            text-align: center;
+            font-size: .8em;
+        }
+        .date-error {
+            margin: 0;
+            text-align: center;
+            font-size: .8em;
+        }
+    }
+}

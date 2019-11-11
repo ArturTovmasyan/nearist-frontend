@@ -1,0 +1,99 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{formTitle}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" *ngIf="form">
+    <div class="container">
+        <form method="POST" [formGroup]="form" enctype="multipart/form-data" (ngSubmit)="submitServer(form.value)"
+              class="form-horizontal">
+
+            <ng-container *ngFor="let input of inputs">
+                <ng-container *ngTemplateOutlet="form_field; context:{field:input}"></ng-container>
+            </ng-container>
+
+            <div class="form-group row text-center">
+                <div class="offset-3 col-9">
+                    <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Save</button>
+                    <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Cancel</button>
+                </div>
+            </div>
+
+
+            <ng-template #form_field let-input="field">
+                <ng-container [ngSwitch]="input.type">
+                    <fieldset *ngSwitchCase="'group'">
+                        <legend>{{ input.legend | translate }}</legend>
+                        <ng-container *ngFor="let input_field of input.fields">
+                            <ng-container *ngTemplateOutlet="form_field;context:{field:input_field}">
+                            </ng-container>
+                        </ng-container>
+                    </fieldset>
+
+                    <div *ngSwitchCase="'checkbox'" class="form-group text-center">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" formControlName="{{input.name}}"
+                                   id="{{ input.name }}" name="{{ input.name }}"
+                                   (click)="checkCheckbox($event, input.name)" />
+                            <label class="form-check-label" for="{{ input.name }}">
+                                {{ input.name | translate }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div *ngSwitchCase="'input-group'" class="form-group row">
+                        <label class="col-4 col-form-label">{{ input.legend | translate }}</label>
+                        <div class="col-8 input-group">
+                            <div *ngIf="input.prepend.length > 0" class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <ng-container *ngFor="let field of input.prepend">
+                                        <input *ngIf="field.type == 'checkbox'" type="checkbox"
+                                               formControlName="{{field.name}}"
+                                               id="{{ field.name }}" name="{{ field.name }}"
+                                               (click)="checkCheckbox($event, field.name)"
+                                               title="{{ field.name | translate }}"/>
+                                    </ng-container>
+                                </div>
+                            </div>
+                            <ng-container *ngFor="let field of input.fields">
+                                <input type="{{field.type}}" class="form-control" formControlName="{{field.name}}"
+                                       id="{{ field.name }}" name="{{ field.name }}"
+                                       placeholder="{{ field.name | translate }}"
+                                       min="{{field.min}}" max="{{field.max}}"
+                                />
+                            </ng-container>
+                            <div *ngIf="input.append.length > 0" class="input-group-append">
+                                <div class="input-group-text">
+                                    <ng-container *ngFor="let field of input.append">
+                                        <input *ngIf="field.type == 'checkbox'" type="checkbox"
+                                               formControlName="{{field.name}}"
+                                               (click)="checkCheckbox($event, field.name)"
+                                               id="{{ field.name }}" name="{{ field.name }}"
+                                               title="{{ field.name | translate }}"/>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngSwitchDefault class="form-group row">
+                        <label for="{{ input.name }}" class="col-4 col-form-label">{{ input.name | translate }}</label>
+                        <div class="col-8">
+                            <input type="{{input.type}}" class="form-control" formControlName="{{input.name}}"
+                                   id="{{ input.name }}" name="{{ input.name }}" min="{{input.min}}"
+                                   max="{{input.max}}"/>
+
+                            <app-control-messages [control]="form.controls[input.name]"></app-control-messages>
+                            <span *ngIf="errorMessage && errorMessage[input.name]" class="error-message">{{ errorMessage[input.name] }}</span>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-template>
+        </form>
+    </div>
+</div>
+
+
+
+

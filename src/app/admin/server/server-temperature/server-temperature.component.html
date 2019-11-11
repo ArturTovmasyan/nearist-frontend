@@ -1,0 +1,66 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Temperature Setup</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" *ngIf="form">
+    <div class="container">
+        <form method="POST" [formGroup]="form" enctype="multipart/form-data" (ngSubmit)="saveData(serverId, form.value);bsModalRef.hide()" class="form-horizontal">
+
+            <div class="form-group row">
+                <label for="logRate" class="col-4 col-form-label">Log Rate</label>
+                <div class="col-8">
+                    <input type="number" class="form-control" formControlName="log_rate" id="logRate" name="logRate">
+
+                    <app-control-messages [control]="form.controls.log_rate"></app-control-messages>
+                    <span *ngIf="errorMessage && errorMessage.log_rate" class="error-message">{{ errorMessage.log_rate }}</span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="eventTemp" class="col-4 col-form-label">Event Threshold </label>
+                <div class="col-8">
+                    <input type="number" class="form-control" formControlName="event_temperature" id="eventTemp"
+                           name="eventTemp">
+
+                    <app-control-messages [control]="form.controls.event_temperature"></app-control-messages>
+                    <span *ngIf="errorMessage && errorMessage.event_temperature" class="error-message">{{ errorMessage.event_temperature }}</span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="eventDuration" class="col-4 col-form-label">Event Threshold Duration</label>
+                <div class="col-8">
+                    <input type="number" class="form-control" formControlName="event_duration" id="eventDuration"
+                           name="eventDuration">
+
+                    <app-control-messages [control]="form.controls.event_duration"></app-control-messages>
+                    <span *ngIf="errorMessage && errorMessage.event_duration" class="error-message">{{ errorMessage.event_duration }}</span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Event Notification</label>
+                <div class="col-8">
+                    <input type="email" class="form-control" formControlName="emails" id="emails" name="emails">
+
+                    <app-control-messages [control]="form.controls.emails"></app-control-messages>
+                    <span *ngIf="errorMessage && errorMessage.emails"
+                          class="error-message">{{ errorMessage.emails }}</span>
+                </div>
+            </div>
+
+            <div class="form-group row text-center">
+                <div class="offset-3 col-9">
+                    <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Save</button>
+                    <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Cancel</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+

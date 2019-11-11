@@ -1,0 +1,27 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'Calendar'" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col">
+            <div class="card mb-12">
+                <div class="card-header">Calendar&nbsp;&nbsp;<a [routerLink]="['/admin/reservations']">List</a>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" (click)="openModal()">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <p-schedule [events]="events"
+                [header]="headerConfig"
+                (onEventClick)="handleEventClick($event)"
+                [contentHeight]="650"
+                [height]="650"
+                [navLinks]="true"
+                [options]="options"
+                [eventLimit]="3">
+    </p-schedule>
+</div>
+

@@ -1,0 +1,31 @@
+<table class="table table-sm table-hover table-bordered">
+    <thead class="text-center">
+    <tr>
+        <th (click)="changeAll($event)">&nbsp;</th>
+        <td *ngFor="let lane of laneList; let j=index" (click)="changeColumn($event, j)">
+            {{laneList[j].itemName}}
+        </td>
+    </tr>
+    </thead>
+    <tbody class="text-center">
+
+
+        <tr *ngFor="let board of boardList let i=index">
+            <td (click)="changeRow($event, i)">
+                {{boardList[i].itemName}}
+            </td>
+            <td *ngFor="let lane of laneList; let j=index">
+                <div class="form-check text-center">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           value="{{board.id}}__{{laneList[j].id}}"
+                           (click)="changeCheckbox($event)"
+                           id="board_{{board.id}}"
+                           [checked]="reservationData.indexOf(board.id+'__'+laneList[j].id) > -1 ? true : false">
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<p [class.d-none]="boardDetailChecked" class="text-center error-message">Board/Lane data is required</p>

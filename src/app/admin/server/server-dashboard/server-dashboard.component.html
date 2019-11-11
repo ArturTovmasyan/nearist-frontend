@@ -1,0 +1,121 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'Server Dashboard'" [icon]="'fa-bar-chart-o'"></app-page-header>
+    <div>
+        <div class="row">
+            <div class="col col-sm-8">
+                <ng-container *ngIf="ready;else emptyTemp">
+                    <div class="col col-sm-12">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                Server Status
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <canvas baseChart [options]="chartOptions" [data]="memoryData"
+                                                [labels]="memoryLabel"
+                                                [chartType]="chartType">
+                                        </canvas>
+                                    </div>
+                                    <div class="col-4">
+                                        <canvas baseChart [options]="chartOptions" [data]="cpuData" [labels]="cpuLabel"
+                                                [chartType]="chartType">
+                                        </canvas>
+                                    </div>
+                                    <div class="col-4">
+                                        <canvas baseChart [options]="chartOptions" [data]="diskData" [labels]="diskLabel"
+                                                [chartType]="chartType">
+                                        </canvas>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4 text-center">
+                                        <span>Memory Usage</span>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <span>CPU Usage</span>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <span>Disk Usage</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="pull-right">
+                                    <a [routerLink]="['/admin/server-status', serverId]" class="btn btn-primary">All info</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <app-server-logs [class]="'card mb-3'" [onlyTable]="true" [serverId]="serverId" [type]="logTypes.TEMPERATURE"></app-server-logs>
+                        <!--<app-server-logs [class]="'card mb-3'" [onlyTable]="false" [serverId]="serverId" [type]="logTypes.MEMORY"></app-server-logs>-->
+                        <!--<app-server-logs [class]="'card mb-3'" [onlyTable]="false" [serverId]="serverId" [type]="logTypes.CPU"></app-server-logs>-->
+                    </div>
+                </ng-container>
+            </div>
+            <div class="col col-sm-4">
+                <div *ngIf="power.show" class="col col-sm-12">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Power Management
+                            <div class="pull-right">
+                                <a style="cursor: pointer" (click)="powerOpenModal()"><i class="fa fa-fw fa-gear"></i></a>
+                            </div>
+                        </div>
+                        <div *ngIf="power.ready; else powerErrorTemplate" class="card-body text-center">
+                            <p>Host is currently <span
+                                    class="{{power.statusClass}}">{{power.status|uppercase }}</span>.
+                            </p>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-success" (click)="powerOn()">Power On</button>
+                                <button class="btn btn-sm btn-danger" (click)="powerOff()">Power Off</button>
+                            </div>
+                            <p>&nbsp;</p>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="ready && bitstream.show" class="col col-sm-12">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Bitstream Management
+                        </div>
+                        <div *ngIf="bitstream.ready; else bitstream.error" class="card-body text-center">
+                            <div class="jumbotron jumbotron-fluid text-center">
+                                <p>There are <span class="text-success">{{ bitstream.boardCount }}</span> boards detected on
+                                    the server.</p>
+                                <div class="btn-group" *ngIf="bitstream.boardCount > 0">
+                                    <button class="btn btn-default" (click)="bitstreamOpenModal()">Load
+                                        Bitstream(s)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #powerErrorTemplate>
+    <div *ngIf="power.error" class="jumbotron jumbotron-fluid text-center">
+        <span class="text-danger">{{power.error}}</span>
+    </div>
+</ng-template>
+
+<ng-template #bitstreamErrorTemplate>
+    <div *ngIf="bitstream.error" class="jumbotron jumbotron-fluid text-center">
+        <span class="text-danger">{{bitstream.error}}</span>
+    </div>
+</ng-template>
+
+<ng-template #emptyTemp>
+    <div *ngIf="error" class="col col-xl-6 col-lg-12 centered">
+        <div class="card mb-3">
+            <div class="card-header">{{error}}</div>
+        </div>
+    </div>
+</ng-template>
+
+

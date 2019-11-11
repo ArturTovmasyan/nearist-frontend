@@ -1,0 +1,90 @@
+<div [@routerTransition]>
+  <app-page-header [nav_heading]="'Admin'" [heading]="'Reservations'" [icon]="'fa-table'"></app-page-header>
+  <div class="row">
+    <div class="col">
+      <div class="card mb-12">
+        <div class="card-header"><a [routerLink]="['/admin/calendar']">Calendar</a>&nbsp;&nbsp;List&nbsp;
+          <div class="pull-right">
+            <button type="button" class="btn btn-sm btn-primary" (click)="openModal()">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body table-responsive" *ngIf="ready; else emptyReservation">
+          <table class="table table-hover table-bordered">
+            <thead class="thead-dark text-center">
+
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Server</th>
+              <th>Bitstream</th>
+              <th>Board/Lane Configuration</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr *ngFor="let reservation of reservations">
+                <td>{{reservation.id}}</td>
+                <td>{{reservation.user.itemName}}</td>
+                <td>{{reservation.server.name}}</td>
+                <td>{{reservation.board_config.data.itemName}}</td>
+                <td>
+                    <ng-container *ngFor="let board_id of objectKeys(reservation.reservation_data)">
+                        <p><strong>{{ board_id }}</strong> - [{{ reservation.reservation_data[board_id] }}]</p>
+                    </ng-container>
+                </td>
+                <td>{{reservation.start_date}}</td>
+                <td>{{reservation.end_date}}</td>
+                <td nowrap="nowrap">
+                    <a class="fancybox-ajax text-primary" style="cursor: pointer" title="edit"
+                       (click)="editReservation(reservation.id)">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                    <a class="text-danger" style="cursor: pointer" (click)="openConfirmModal(template, reservation.id)"
+                       title="remove">
+                        <i class="fa fa-times"></i>
+                    </a>
+                    <a class="text-success" style="cursor: pointer" (click)="loadConfigModal(loadConfigModalTemplate, reservation.id)"
+                       title="Load configuration to server">
+                        <i class="fa fa-cogs"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyReservation>
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container" *ngIf="empty">
+      <p class="lead text-center">
+        You haven't created any records yet
+      </p>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #template>
+    <div class="modal-body text-center">
+        <p>Are you sure you want to delete reservetion?</p>
+        <button type="button" class="btn btn-primary" (click)="confirm()">Yes</button>
+        <button type="button" class="btn btn-default" (click)="decline()">No</button>
+    </div>
+</ng-template>
+
+
+<ng-template #loadConfigModalTemplate>
+    <div class="modal-body text-center">
+        <p>Are you sure you want to load reservetion configuration to server?</p>
+        <button type="button" class="btn btn-primary" (click)="loadConfigConfirm()">Yes</button>
+        <button type="button" class="btn btn-default" (click)="loadConfigDecline()">No</button>
+    </div>
+</ng-template>

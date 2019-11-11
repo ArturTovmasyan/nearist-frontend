@@ -1,0 +1,77 @@
+<div [@routerTransition]>
+    <app-page-header [nav_heading]="'Admin'" [heading]="'Server'" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col">
+            <div class="card mb-12">
+                <div class="card-header">Server List
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" (click)="openModal()">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body table-responsive" *ngIf="ready;else emptyTemp">
+                    <table class="table table-hover table-bordered">
+                        <thead class="thead-dark text-center">
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>IP Address</th>
+                            <th>SSH Port</th>
+                            <th>FTP Port</th>
+                            <th>iFlex Address</th>
+                            <th>IPMI Address</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr *ngFor="let server of servers">
+                            <td>{{server.id}}</td>
+                            <td><a href="javascript:void(0)" (click)="serverData(server.id, server.name)">{{server.name}}</a>
+                            </td>
+                            <td><a href="javascript:void(0)"
+                                   (click)="serverData(server.id, server.name)">{{server.ip}}</a></td>
+                            <td>{{server.ssh_port}}</td>
+                            <td>{{server.ftp_port}}</td>
+                            <td>{{server.iflex_ip}}:{{server.iflex_port}}</td>
+                            <td>{{server.ipmi_ip}}:{{server.ipmi_port}}</td>
+                            <td>{{server.description}}</td>
+
+                            <td nowrap="nowrap">
+                                <a class="text-primary" (click)="editServer(server.id)" style="cursor: pointer"><i
+                                        class="fa fa-edit"></i></a>
+                                <a class="text-danger" style="cursor: pointer"
+                                   (click)="openConfirmModal(template, server.id)">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #emptyTemp>
+    <div class="jumbotron jumbotron-fluid">
+        <div *ngIf="empty" class="container">
+            <p class="lead text-center">
+                You haven't created any records yet
+            </p>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #template>
+    <div class="modal-body text-center">
+        <p>Are you sure you want to delete record?</p>
+        <button type="button" class="btn btn-primary" (click)="confirm()">Yes</button>
+        <button type="button" class="btn btn-default" (click)="decline()">No</button>
+    </div>
+</ng-template>

@@ -1,0 +1,80 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{formTitle}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" *ngIf="form">
+    <div class="container">
+        <form method="POST" [formGroup]="form" enctype="multipart/form-data"
+              (ngSubmit)="submitUser(form.value, userCategory)"
+              class="form-horizontal">
+
+            <div class="form-group row" *ngFor="let input of inputs">
+                <label for="{{ input.name }}" class="col-4 col-form-label">{{ input.name | translate }}</label>
+
+                <ng-container *ngIf="input.name == 'api_key'">
+                    <ngx-password-input class="col-8" generator="true" preview="false" regex="[0-9A-Za-z]{8}">
+                        <input type="text" class="form-control" formControlName="{{input.name}}" id="{{ input.name }}"
+                               name="{{ input.name }}" input-element (blur)="updateValues()" #inputApiKey/>
+                        <ng-container error-element>
+                            <app-control-messages [control]="form.controls[input.name]"></app-control-messages>
+                            <span *ngIf="errorMessage && errorMessage[input.name]" class="error-message">{{ errorMessage[input.name] }}</span>
+                        </ng-container>
+                    </ngx-password-input>
+                </ng-container>
+
+                <ng-container *ngIf="input.name == 'phone'">
+                    <div class="col-8" *ngIf="!input.options; else disableTemp">
+                        <input type="{{input.type}}" class="form-control"
+                               formControlName="{{input.name}}" id="{{ input.name }}" name="{{ input.name }}"
+                               [dropSpecialCharacters]="false" mask="+99999999999999999" placeholder="+1111111111111"/>
+                        <app-control-messages [control]="form.controls[input.name]"></app-control-messages>
+                        <span *ngIf="errorMessage && errorMessage[input.name]" class="error-message">{{ errorMessage[input.name] }}</span>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="input.type == 'password'">
+                    <ngx-password-input class="col-8" generator="true" preview="true"
+                                        regex="^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[`~!@#$%^&*_\-+=|\/?<>])([a-zA-Z0-9`~!@#$%^&*_\-+=|\/?<>]{8,16})$">
+                        <input type="password" class="form-control" formControlName="{{input.name}}"
+                               id="{{ input.name }}"
+                               name="{{ input.name }}" input-element (blur)="updateValues()" #inputPassword autocomplete="off"/>
+                        <ng-container error-element>
+                            <app-control-messages [control]="form.controls[input.name]"></app-control-messages>
+                            <span *ngIf="errorMessage && errorMessage[input.name]" class="error-message">{{ errorMessage[input.name] }}</span>
+                        </ng-container>
+                    </ngx-password-input>
+                </ng-container>
+
+                <ng-container *ngIf="input.type != 'password' && input.name != 'api_key' && input.name != 'phone'">
+                    <div class="col-8" *ngIf="!input.options; else disableTemp">
+                        <input type="{{input.type}}" class="form-control" formControlName="{{input.name}}"
+                               id="{{ input.name }}"
+                               name="{{ input.name }}" (focus)="updateValues()">
+                        <app-control-messages [control]="form.controls[input.name]"></app-control-messages>
+                        <span *ngIf="errorMessage && errorMessage[input.name]" class="error-message">{{ errorMessage[input.name] }}</span>
+                    </div>
+                </ng-container>
+
+                <ng-template #disableTemp>
+                    <div class="col-8">
+                        <span class="form-control">{{user[input.name]}}</span>
+                    </div>
+                </ng-template>
+            </div>
+
+            <div class="form-group row text-center">
+                <div class="offset-3 col-9">
+                    <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Save</button>
+                    <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Cancel</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+

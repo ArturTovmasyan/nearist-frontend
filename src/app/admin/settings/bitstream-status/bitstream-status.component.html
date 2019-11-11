@@ -1,0 +1,60 @@
+<div [@routerTransition]>
+    <app-page-header [nav_heading]="'Admin'" [heading]="'Bitstream Status List'" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col">
+            <div class="card mb-12">
+                <div class="card-header">Bitstream Status List
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" (click)="openModalAdd()">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body table-responsive" *ngIf="ready; else emptyBitstream">
+                    <table class="table table-hover table-bordered">
+                        <thead class="thead-dark text-center">
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let item of list">
+                            <td>{{item.id}}</td>
+                            <td>{{item.title}}</td>
+                            <td nowrap="nowrap">
+                                <a class="fancybox-ajax text-primary" style="cursor: pointer"
+                                   (click)="openModalAddEdit(item.id)"><i
+                                    class="fa fa-edit"></i></a>
+                                <a class="text-danger" style="cursor: pointer"
+                                   (click)="openModalRemove(tModalRemove, item.id)">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #emptyBitstream>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container" *ngIf="empty">
+            <p class="lead text-center">
+                You haven't created any records yet
+            </p>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #tModalRemove>
+    <div class="modal-body text-center">
+        <p>Are you sure you want to delete the record?</p>
+        <button type="button" class="btn btn-primary" (click)="confirmRemove()">Yes</button>
+        <button type="button" class="btn btn-default" (click)="declineRemove()">No</button>
+    </div>
+</ng-template>

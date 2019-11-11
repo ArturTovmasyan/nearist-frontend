@@ -1,0 +1,12 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'Log List'" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col">
+            <div class="card mb-12">
+                <app-server-logs [serverId]="serverId" [type]="logTypes.TEMPERATURE" [isList]="true"></app-server-logs>
+                <app-server-logs [serverId]="serverId" [type]="logTypes.MEMORY" [isList]="true"></app-server-logs>
+                <app-server-logs [serverId]="serverId" [type]="logTypes.CPU" [isList]="true"></app-server-logs>
+            </div>
+        </div>
+    </div>
+</div>

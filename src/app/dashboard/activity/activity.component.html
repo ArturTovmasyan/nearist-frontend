@@ -1,0 +1,19 @@
+<div [@routerTransition]>
+    <div class="timeline"
+        infinite-scroll
+        [infiniteScrollDistance]="scrollDistance"
+        (scrolled)="onScrollDown()">
+        <li *ngFor="let log of logs; let odd=odd; let even=even" [ngClass]="{ odd: odd, even:even}">
+            <div class="timeline-badge {{ log.color }}"><i class="{{ log.icon }}"></i></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4 class="timeline-title">{{ log.title }}</h4>
+                    <p><small class="text-muted"><i class="fa fa-time"></i> {{ log.date_time }}</small></p>
+                </div>
+                <div class="timeline-body">
+                    <p>{{ log.message }}</p>
+                </div>
+            </div>
+        </li>
+    </div>
+</div>

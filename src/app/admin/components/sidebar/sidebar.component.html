@@ -1,0 +1,80 @@
+<nav class="sidebar" [ngClass]="{sidebarPushRight: isActive}">
+    <div class="list-group">
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('system-items')">
+                <span><i class="fa fa-th-list"></i>&nbsp; {{ 'System' | translate }}</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'system-items'">
+                <ul class="submenu">
+                    <li>
+                        <a [routerLink]="['servers']" [routerLinkActive]="['router-submenu-active']"><span>{{ 'Servers' | translate }}</span></a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['bitstream']" [routerLinkActive]="['router-submenu-active']"><span>{{ 'Bitstreams' | translate }}</span></a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('schedule-items')">
+                <span><i class="fa fa-th-list"></i>&nbsp; {{ 'Schedule' | translate }}</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'schedule-items'">
+                <ul class="submenu">
+                    <li>
+                        <a [routerLink]="['reservations']" [routerLinkActive]="['router-submenu-active']"><span>{{ 'Reservations' | translate }}</span></a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)"><span>{{ 'Utilization' | translate }}</span></a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('report-items')">
+                <span><i class="fa fa-th-list"></i>&nbsp; {{ 'Reports' | translate }}</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'report-items'">
+                <ul class="submenu">
+                    <li>
+                        <a href="javascript:void(0)"><span>{{ '...' | translate }}</span></a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('administration-items')">
+                <span><i class="fa fa-th-list"></i>&nbsp; {{ 'Administration' | translate }}</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'administration-items'">
+                <ul class="submenu">
+                    <li><a [routerLink]="['administration/users']" [routerLinkActive]="['router-submenu-active']">
+                        <span>{{ 'Users' | translate }}</span>
+                    </a></li>
+                    <li><a [routerLink]="['administration/customers']" [routerLinkActive]="['router-submenu-active']">
+                        <span>{{ 'Customers' | translate }}</span>
+                    </a></li>
+                    <li><a [routerLink]="['administration/log']" [routerLinkActive]="['router-submenu-active']">
+                        <span>{{ 'Authorization Log' | translate }}</span>
+                    </a></li>
+                </ul>
+            </li>
+        </div>
+
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('settings-items')">
+                <span><i class="fa fa-th-list"></i>&nbsp; {{ 'Settings' | translate }}</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'settings-items'">
+                <ul class="submenu">
+                    <li><a [routerLink]="['settings/bitstream-status']" [routerLinkActive]="['router-submenu-active']">
+                        <span>{{ 'Bitstream Status' | translate }}</span>
+                    </a></li>
+                </ul>
+            </li>
+        </div>
+    </div>
+</nav>

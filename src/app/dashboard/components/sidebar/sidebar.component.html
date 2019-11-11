@@ -1,0 +1,19 @@
+<nav class="sidebar" [ngClass]="{sidebarPushRight: isActive}">
+    <div class="list-group">
+        <div class="nested-menu">
+            <a class="list-group-item" [routerLink]="['servers']">
+                <span><i class="fa fa-th-list"></i>&nbsp; {{ 'Servers' | translate }}</span>
+            </a>
+        </div>
+        <div class="nested-menu">
+            <a class="list-group-item" [routerLink]="['activity']">
+                <span><i class="fa fa-history"></i>&nbsp; {{ 'Activity' | translate }}</span>
+            </a>
+        </div>
+        <div class="nested-menu">
+            <a class="list-group-item" [routerLink]="['documentation']">
+                <span><i class="fa fa-book"></i>&nbsp; {{ 'Documentation' | translate }}</span>
+            </a>
+        </div>
+    </div>
+</nav>

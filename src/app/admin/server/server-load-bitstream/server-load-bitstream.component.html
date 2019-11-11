@@ -1,0 +1,48 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Load Bitstream</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" *ngIf="form">
+    <div class="container">
+        <form method="POST" [formGroup]="form" (ngSubmit)="submitBitstream()"
+              class="form-horizontal">
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Bitstream Configuration</label>
+                <div class="col-8 roles-select">
+                    <angular2-multiselect [data]="boardConfigurationList"
+                                          [(ngModel)]="selectedBoardConfiguration"
+                                          [settings]="boardConfigurationSelectSettings"
+                                          [formControlName]="'boardConfiguration'">
+                    </angular2-multiselect>
+                    <app-control-messages [control]="form.controls.boardConfiguration"></app-control-messages>
+                    <span *ngIf="errorMessage && errorMessage.boardConfiguration" class="error-message">{{ errorMessage.boardConfiguration }}</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Configutation (Board/Lane)</label>
+                <div class="col-8">
+                    <app-board-lane-matrix [boardList]="boardList" [laneList]="laneList" [reservationData]="submitData" [boardDetailChecked]="boardDetailChecked"></app-board-lane-matrix>
+                </div>
+            </div>
+
+            <p *ngIf="errorMessage && errorMessage.reserved_server" class="text-center error-message">
+                {{errorMessage.reserved_server}}</p>
+
+            <div class="form-group row text-center">
+                <div class="offset-2 col-9">
+                    <button type="submit" class="btn btn-primary"
+                            [disabled]="!form.valid || submitData.length == 0">
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Cancel</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+

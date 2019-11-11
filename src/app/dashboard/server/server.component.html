@@ -1,0 +1,31 @@
+<div class="customer-servers-container" [@routerTransition]>
+    <div class="row">
+        <div *ngFor="let server of servers" class="col col-sm-4">
+            <div class="card mb-3">
+                <div class="card-header">
+                    {{ server.name }} Power Management
+                </div>
+                <div *ngIf="power.ready; else powerErrorTemplate" class="card-body text-center">
+                    <p class="title">Host is currently <span class="{{power.statusClass}}">{{power.status|uppercase }}</span>.</p>
+                    <div *ngIf="!server.dateRestriction" class="btn-group">
+                        <button class="btn btn-sm btn-success" (click)="powerOn(server.id)">Power On</button>
+                        <button class="btn btn-sm btn-danger" (click)="powerOff(server.id)">Power Off</button>
+                    </div>
+                    <p class="date-interval">
+                        <span class="text-danger">{{server.startDate|date:'yyyy-MM-dd H:mm:ss'}} - {{server.endDate|date:'yyyy-MM-dd H:mm:ss'}}</span>
+                    </p>
+                    <p *ngIf="server.dateRestriction" class="date-error">
+                        <span class="text-danger">{{server.dateRestrictionMessage}}</span>
+                    </p>
+                    <p>&nbsp;</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #powerErrorTemplate>
+    <div *ngIf="power.error" class="jumbotron jumbotron-fluid text-center">
+        <span class="text-danger">{{power.error}}</span>
+    </div>
+</ng-template>

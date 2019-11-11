@@ -1,0 +1,159 @@
+<div class="{{class}}">
+    <div *ngIf="onlyTable" class="card-header">
+        <div *ngIf="!onlyTable" class="pull-left">
+            <tabset>
+                <tab heading="Table" id="table" [active]="tableTab" (select)="selectTab($event)"></tab>
+                <tab heading="Chart" id="chart" (select)="selectTab($event)"></tab>
+            </tabset>
+        </div>
+        <div class="text-center"><strong>{{logTitle}}</strong>
+            <div *ngIf="type === logTypes.TEMPERATURE && !isList" class="pull-right">
+                <a style="cursor: pointer" (click)="openModal()"><i class="fa fa-fw fa-gear"></i></a>
+            </div>
+        </div>
+        <div *ngIf="isList && tempReady" class="pull-right">
+            <button type="button" class="btn btn-sm btn-danger" title="Remove all logs"
+                    (click)="openRemoveConfirmModal(removeModal)">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="!onlyTable" class="btn-group pull-right" style="margin: 0 auto; padding: 15px;">
+        <button type="button" class="btn btn-sm btn-primary" [class.active]="chartTimeLineFilter == 'hour'" id="hour"
+                (click)="filterLogsByDate($event)">Hour
+        </button>
+        <button type="button" class="btn btn-sm btn-primary" [class.active]="chartTimeLineFilter == 'day'" id="day"
+                (click)="filterLogsByDate($event)">Day
+        </button>
+        <button type="button" class="btn btn-sm btn-primary" [class.active]="chartTimeLineFilter == 'week'" id="week"
+                (click)="filterLogsByDate($event)">Week
+        </button>
+    </div>
+
+    <div class="card-body" *ngIf="tempReady;else emptyLog">
+        <div class="card-body table-responsive">
+            <table *ngIf="tableTab" class="table table-sm table-hover table-bordered table-striped">
+                <ng-container *ngIf="type === logTypes.AUTH">
+                    <thead class="thead-dark text-center">
+                    <tr>
+                        <th>Date</th>
+                        <th>Message</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr *ngFor="let data of dataList">
+                        <td>{{data.date_time|date:'yyyy-MM-dd H:mm:ss'}}</td>
+                        <td>{{data.message}}</td>
+                    </tr>
+                    </tbody>
+                </ng-container>
+
+                <ng-container *ngIf="type === logTypes.TEMPERATURE">
+                    <thead class="thead-dark text-center">
+                        <tr>
+                            <th>Date</th>
+                            <th>Board</th>
+                            <th>Lane</th>
+                            <th>DTR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataList">
+                            <td>{{data.date_time|date:'yyyy-MM-dd H:mm:ss'}}</td>
+                            <td>{{data.board}}</td>
+                            <td>{{data.lane}}</td>
+                            <td>{{data.temperature_codes}}</td>
+                        </tr>
+                    </tbody>
+                </ng-container>
+
+                <ng-container *ngIf="type === logTypes.MEMORY">
+                    <thead class="thead-dark text-center">
+                    <tr>
+                        <th>Date</th>
+                        <th>Level</th>
+                        <th>Memory</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr *ngFor="let data of dataList">
+                        <td>{{data.date_time|date:'yyyy-MM-dd H:mm:ss'}}</td>
+                        <td>{{data.level}}</td>
+                        <td>{{data.MEMORY ? data.MEMORY : ''}}</td>
+                    </tr>
+                    </tbody>
+                </ng-container>
+
+                <ng-container *ngIf="type === logTypes.CPU">
+                    <thead class="thead-dark text-center">
+                    <tr>
+                        <th>Date</th>
+                        <th>Level</th>
+                        <th>Cpu</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr *ngFor="let data of dataList">
+                        <td>{{data.date_time|date:'yyyy-MM-dd H:mm:ss'}}</td>
+                        <td>{{data.level}}</td>
+                        <td>{{data.CPU || data.CPU == 0 ? data.CPU + '%' : ''}}</td>
+                    </tr>
+                    </tbody>
+                </ng-container>
+            </table>
+        </div>
+        <div *ngIf="!tableTab" [class.col-sm-7]="isList">
+            <canvas baseChart
+                    [chartType]="'line'"
+                    [datasets]="chartData"
+                    [labels]="chartLabels"
+                    [options]="chartOptions"
+                    [legend]="true">
+            </canvas>
+        </div>
+    </div>
+
+    <div *ngIf="!isList" class="card-footer">
+        <div class="pull-left">
+            <pagination [totalItems]="paginationTotalItem"
+                        [maxSize]="5"
+                        [(ngModel)]="page"
+                        (pageChanged)="pageChanged($event)"
+                        [boundaryLinks]="true"
+                        [directionLinks]="true"
+                        [previousText]="'<i class=&quot;fa fa-step-backward&quot;></i>'"
+                        [nextText]="'<i class=&quot;fa fa-step-forward&quot;></i>'"
+                        [firstText]="'<i class=&quot;fa fa-fast-backward&quot;></i>'"
+                        [lastText]="'<i class=&quot;fa fa-fast-forward&quot;></i>'"
+                        *ngIf="tableTab">
+            </pagination>
+        </div>
+        <div *ngIf="!onlyTable" class="pull-right">
+            <a [routerLink]="['/admin/logs', serverId]" class="btn btn-primary">All info</a>
+        </div>
+    </div>
+</div>
+
+<ng-template #emptyLog>
+    <div class="jumbotron jumbotron-fluid">
+        <div *ngIf="empty" class="container">
+            <p class="lead text-center">
+                No records found
+            </p>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #removeModal>
+    <div class="modal-body text-center">
+        <p>Are you sure you want to delete all <strong>{{logTitle}}?</strong></p>
+        <button type="button" class="btn btn-primary" (click)="confirm()">Yes</button>
+        <button type="button" class="btn btn-default" (click)="decline()">No</button>
+    </div>
+</ng-template>
+
+
